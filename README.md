@@ -106,7 +106,8 @@ This circuit structure is implemented in LTSpice to perform:
 - Transient response analysis  
 - AC frequency response analysis  
 
-<img width="556" height="459" alt="Screenshot 2026-02-23 191931" src="https://github.com/user-attachments/assets/d99f7464-a76e-45be-a0be-6d4d2f14f299" />
+<img width="870" height="772" alt="image" src="https://github.com/user-attachments/assets/ce0197ff-7b06-47c3-b310-0e6d1a13d042" />
+
 
 ## **3. DESIGN CALCULATIONS**
 
