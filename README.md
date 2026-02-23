@@ -235,7 +235,7 @@ Power Dissipation = 0.24 mW
 
 All design constraints are satisfied, and the device operates in saturation, ensuring proper voltage amplification.
 
-DC Analysis
+## **DC Analysis**
 
 <img width="1905" height="406" alt="image" src="https://github.com/user-attachments/assets/13bcb416-476d-4253-9617-2314ef5b152d" />
 
@@ -324,5 +324,94 @@ Av ≈ 2.22
 Gain in dB:
 
 Av(dB) = 20 log10(2.22)  
-Av(dB) ≈ 6.93 dB  
+Av(dB) ≈ 6.93 dB 
 
+## **AC Analysis**
+
+AC analysis is performed to determine the frequency response of the amplifier.  
+It provides the mid-band gain, bandwidth, and unity gain bandwidth, showing how the amplifier behaves across different frequencies.
+
+<img width="1905" height="405" alt="image" src="https://github.com/user-attachments/assets/010199b5-94b7-48c0-a8df-f5c664dd3fad" />
+
+## **AC Analysis Results**
+
+### **Mid-Band Gain**
+
+From the AC frequency response plot:
+
+Gain ≈ 5.31 dB  
+
+Converting to linear scale:
+
+Av = 10^(5.31/20)  
+Av ≈ 1.84 V/V  
+
+---
+
+### **Bandwidth**
+
+The −3 dB bandwidth is observed from the AC plot at approximately:
+
+BW ≈ 10 GHz  
+
+---
+
+### **Theoretical Bandwidth**
+
+For a resistive load CS amplifier:
+
+BW ≈ 1 / (2π RD CL)
+
+Given:
+
+RD = 3 kΩ  
+CL = 0.5 pF  
+
+BW = 1 / (2π × 3000 × 0.5 × 10^-12)
+
+BW ≈ 106.1 MHz  
+
+(Theoretical estimate assumes dominant load pole only.)
+
+---
+
+### **Unity Gain Bandwidth (UGB)**
+
+UGB = Av × BW  
+
+UGB ≈ 1.84 × 10 GHz  
+
+UGB ≈ 18.4 GHz  
+
+---
+
+The AC response confirms proper small-signal operation with stable mid-band gain and high-frequency roll-off due to parasitic capacitances and load capacitance.
+
+## **Comparison of Results**
+
+| Parameter | Theoretical | Simulated |
+|------------|-------------|------------|
+| Voltage Gain (Av) | 2.22 V/V | 1.84 V/V |
+| Gain (dB) | 6.93 dB | 5.31 dB |
+| Bandwidth | 106 MHz | ~10 GHz |
+| Power | 0.24 mW | 0.24 mW |
+
+---
+
+## **Inference**
+
+The Common Source (CS) amplifier was successfully designed using NMOS in 180nm technology under the given constraints:
+
+- VDD = 1.2 V  
+- Power ≤ 0.4 mW  
+- CL = 0.5 pF  
+
+The selected drain current of 200 µA ensures power dissipation remains within limits (0.24 mW).  
+The bias point is centered at VDS ≈ VDD/2 (≈ 0.6 V), ensuring symmetrical output swing.
+
+The simulated gain (1.84 V/V) is slightly lower than the theoretical value (2.22 V/V).  
+This deviation occurs because theoretical calculations assume an ideal MOSFET, whereas simulation includes channel length modulation, finite output resistance (ro), and parasitic capacitances.
+
+AC analysis confirms stable mid-band gain and expected high-frequency roll-off due to the output pole.
+
+Overall, the amplifier satisfies biasing, gain, bandwidth, and power specifications.
