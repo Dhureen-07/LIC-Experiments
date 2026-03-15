@@ -250,7 +250,7 @@ Av(dB) = 19.78 dB
 Vin = SINE(0.81 V, 10 mV, 1 kHz)
 Input signal centered at 0.81 V with a peak amplitude of 10 mV.
 
-![image alt]()
+![image alt](https://github.com/Dhureen-07/LIC-EXP-1/blob/main/c1%20input.png?raw=true)
 
 **Output Waveform**
 
@@ -265,3 +265,89 @@ The output waveform is a phase-inverted amplified version of the input signal.
 Measured gain ≈ 9.75 V/V (≈ 19.78 dB).
 
 ![image alt](https://github.com/Dhureen-07/LIC-EXP-1/blob/main/c1%20both%20in%20and%20out.png?raw=true)
+
+**AC Analysis**
+Frequency Response
+
+The AC analysis determines the frequency response and bandwidth of the amplifier.
+
+LTspice Cursor Measurements
+
+| Parameter         | Value       |
+| ----------------- | ----------- |
+| Cursor Frequency  | 190.628 MHz |
+| Cursor Magnitude  | 17.038 dB   |
+| Phase at Cursor   | 129.515°    |
+| Midband Gain      | 20.038 dB   |
+| −3 dB Gain        | 17.038 dB   |
+| Bandwidth (f−3dB) | 190.628 MHz |
+
+![image alt](https://github.com/Dhureen-07/LIC-EXP-1/blob/main/c1%20ac%20analysis.png?raw=true)
+
+**Frequency Response Observation**
+
+The amplifier exhibits a midband gain of approximately 20 dB with a −3 dB bandwidth of 190.628 MHz.
+The wide bandwidth indicates that the circuit is capable of operating in high-frequency analog signal processing applications.
+
+**Theoretical Gain Calculation**
+Small-Signal Parameters
+
+| Parameter                   | Formula            | Value   |
+| --------------------------- | ------------------ | ------- |
+| Transconductance gm         | gm = 2ID / Vov     | 1.6 mS  |
+| Channel-Length Modulation λ | Assumed            | 0.1 V⁻¹ |
+| Output Resistance (NMOS)    | ro1 = 1 / (λ × ID) | 50 kΩ   |
+| Output Resistance (PMOS)    | ro2 = 1 / (λ × ID) | 50 kΩ   |
+
+
+**Step-by-Step Gain Calculation**
+
+ro1 || ro2 = 50 kΩ || 50 kΩ
+           = 25 kΩ
+
+Numerator = gm × (ro1 || ro2)
+          = 1.6 mS × 25 kΩ
+          = 40
+
+Denominator = 1 + gm × RS
+            = 1 + (1.6 mS × 1 kΩ)
+            = 2.6
+
+|Av| = 40 / 2.6
+|Av| = 15.38 V/V
+
+**Voltage Gain in Decibels**
+
+Av(dB) = 20 log10 (15.38)
+
+Av(dB) ≈ 23.73 dB
+
+**Results Summary**
+| Analysis                | Gain (V/V) | Gain (dB) | Bandwidth   |
+| ----------------------- | ---------- | --------- | ----------- |
+| Transient Analysis      | 9.75       | 19.78 dB  | —           |
+| AC Analysis             | —          | 20.038 dB | 190.628 MHz |
+| Theoretical Calculation | 15.38      | 23.73 dB  | —           |
+
+**Observations**
+
+The transient gain (19.78 dB) and AC gain (20.038 dB) are closely matched, confirming the correctness of the simulation setup.
+
+The theoretical gain (23.73 dB) is slightly higher than the simulated gain because theoretical models neglect several second-order MOSFET effects.
+
+LTspice simulation includes channel-length modulation, body effect, and parasitic capacitances, which slightly reduce the gain.
+
+The target drain current of 200 µA was successfully achieved with a simulated value of 200.211 µA, confirming accurate biasing.
+
+The source degeneration resistor (RS = 1 kΩ) improves stability and linearity but reduces the overall voltage gain.
+
+The amplifier demonstrates a high bandwidth of approximately 190 MHz, making it suitable for wideband analog applications.
+
+
+**Conclusion**
+
+The source-degenerated common source amplifier was successfully designed and simulated using TSMC 180 nm CMOS technology in LTspice. The circuit achieves a drain current of 200.211 µA, a midband gain of approximately 20 dB, and a −3 dB bandwidth of 190.628 MHz.
+
+The close agreement between transient and AC simulation results validates the correctness of the design methodology. The difference between theoretical and simulated gain highlights the impact of realistic MOSFET device effects included in the TSMC 180 nm model.
+
+The design demonstrates how source degeneration improves amplifier stability and linearity while maintaining a reasonable gain and wide bandwidth.
