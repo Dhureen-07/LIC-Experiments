@@ -173,7 +173,7 @@ VGp  = VDD - VSG    = 1.2 - 0.64  = 0.56 V
 
 ## LTspice Circuit
 
-
+![LTspice Circuit](circuit%201.png)
 
 ```
 
