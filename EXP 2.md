@@ -351,3 +351,266 @@ The source-degenerated common source amplifier was successfully designed and sim
 The close agreement between transient and AC simulation results validates the correctness of the design methodology. The difference between theoretical and simulated gain highlights the impact of realistic MOSFET device effects included in the TSMC 180 nm model.
 
 The design demonstrates how source degeneration improves amplifier stability and linearity while maintaining a reasonable gain and wide bandwidth.
+
+
+
+
+
+
+
+
+---
+
+# Experiment 2B — Cascode Amplifier
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/Technology-TSMC%20180nm-blue">
+<img src="https://img.shields.io/badge/Tool-LTspice-orange">
+<img src="https://img.shields.io/badge/Circuit-Cascode%20Amplifier-green">
+
+</p>
+
+> **Design and Simulation of a Cascode MOSFET Amplifier**
+
+---
+
+## Aim
+
+To design and simulate a **Cascode MOSFET amplifier** using TSMC 180 nm CMOS models in LTspice and analyze its gain, operating point, and frequency response.
+
+---
+
+## Theory
+
+A **cascode amplifier** is formed by stacking a **common source transistor** with a **common gate transistor**.
+
+The configuration improves amplifier performance by:
+
+- Increasing output resistance
+- Reducing Miller effect
+- Increasing voltage gain
+- Improving bandwidth
+
+The cascode structure isolates the input node from the output node, minimizing the effect of gate-drain capacitance.
+
+---
+
+## Circuit Description
+
+The cascode amplifier consists of three MOSFETs:
+
+| Transistor | Function |
+|-----------|-----------|
+| M1 | Input common-source transistor |
+| M2 | Common-gate transistor (cascode stage) |
+| M3 | Current source transistor |
+
+The output is taken at the **drain of M1 / source of M2**.
+
+---
+
+## Design Specifications
+
+| Parameter | Value |
+|-----------|------|
+| Technology | TSMC 180 nm |
+| Supply Voltage VDD | 1.2 V |
+| Target Drain Current ID | 200 µA |
+| Overdrive Voltage Vov | 0.25 V |
+| Channel Length L | 180 nm |
+| NMOS Threshold Voltage VTHn | 0.36 V |
+| PMOS Threshold Voltage VTHp | 0.39 V |
+
+---
+
+## Power Verification
+
+P = VDD × ID
+
+P = 1.2 × 200 µA
+
+P = 0.24 mW
+
+
+✔ Within power budget
+
+---
+
+## Output Voltage Selection
+
+For symmetrical operation,
+
+Vout = VDD/2 + VS
+
+Vout = 1.2/2 + 0.3
+
+Vout ≈ 0.9 V
+
+
+---
+
+## Gate-Source Voltage
+
+VGS = VTHn + Vov
+
+VGS = 0.36 + 0.25
+
+VGS = 0.61 V
+
+
+---
+
+## Source Voltage Assumption
+
+Assume
+
+VS = 0.3 V
+
+Therefore
+
+VG = VGS + VS
+
+VG = 0.61 + 0.3
+
+VG = 0.91 V
+
+
+---
+
+## Saturation Condition
+
+For NMOS operation in saturation
+
+VDS ≥ VGS − VTH
+
+0.6 ≥ 0.61 − 0.36
+
+0.6 ≥ 0.25
+
+
+✔ Condition satisfied
+
+The transistor operates in the **saturation region**.
+
+---
+
+## Transistor Width Calculation
+
+Using
+
+ID = (1/2) μnCox (W/L) (Vov)²
+
+Rearranging
+
+W = (2 × ID × L) / (μnCox × Vov²)
+
+Substituting values
+
+W = (2 × 200×10⁻⁶ × 180×10⁻⁹) / (230×10⁻⁶ × 0.25²)
+
+W ≈ 5.008 µm
+
+
+---
+
+## PMOS Width Calculation
+
+W = (2 × ID × L) / (μpCox × Vov²)
+
+W ≈ 9.98 µm
+
+
+---
+
+## Final Transistor Dimensions
+
+| Device | Width (µm) | Length (µm) |
+|------|------|------|
+| NMOS M1 | 10 µm | 180 nm |
+| NMOS M3 | 6.5 µm | 180 nm |
+| PMOS M2 | 4.62 µm | 180 nm |
+
+
+---
+
+## LTspice Circuit
+
+<p align="center">
+<img src="circuit2.png" width="650">
+</p>
+
+The circuit was implemented using **TSMC 180 nm CMOS models** in LTspice.
+
+The amplifier consists of:
+
+- M1 : Common source transistor  
+- M2 : Cascode transistor  
+- M3 : Current source transistor  
+
+The output is taken at the **drain node of M1 / source node of M2**.
+
+---
+
+## Simulation Setup
+
+| Simulation | LTspice Command |
+|-----------|----------------|
+| Operating Point | .op |
+| DC Sweep | .dc v3 0 2 |
+| AC Analysis | .ac dec 20 1 100G |
+| Transient Analysis | .tran 5m |
+
+The TSMC model library is included using
+
+.include tsmc018.lib
+
+---
+
+## Component List
+
+| Component | Value | Description |
+|-----------|------|-------------|
+| V1 | 1.2 V | VDD supply |
+| V2 | 1.2 V | PMOS source bias |
+| V3 | SINE(0.91 10m 1K) AC 1 | Input signal |
+| V4 | 0.56 V | PMOS gate bias |
+| V5 | 0.61 V | NMOS bias voltage |
+| M1 | NMOS | Amplifying transistor |
+| M2 | PMOS | Cascode load transistor |
+| M3 | NMOS | Current source transistor |
+
+---
+
+## DC Operating Point — LTspice Result
+
+<p align="center">
+<img src="c2_operating_point.png" width="650">
+</p>
+
+| Node | Voltage |
+|------|--------|
+| V(n001) | 1.2 V |
+| V(n002) | 1.2 V |
+| V(n003) | 0.2308 V |
+| V(n004) | 0.61 V |
+| V(vin) | 0.91 V |
+| V(vout) | 0.9597 V |
+
+---
+
+## Operating Point Observation
+
+The simulated output voltage is approximately
+
+Vout ≈ 0.96 V
+
+which is close to the theoretical value of
+
+Vout ≈ 0.9 V
+
+The drain current obtained from simulation is
+
+ID ≈ 200 µA
+
+which confirms that the biasing conditions are correctly established.
