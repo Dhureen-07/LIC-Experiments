@@ -536,9 +536,7 @@ W ≈ 9.98 µm
 
 ## LTspice Circuit
 
-<p align="center">
-<img src="circuit2.png" width="650">
-</p>
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/circuit%202.png?raw=true)
 
 The circuit was implemented using **TSMC 180 nm CMOS models** in LTspice.
 
@@ -584,9 +582,7 @@ The TSMC model library is included using
 
 ## DC Operating Point — LTspice Result
 
-<p align="center">
-<img src="c2_operating_point.png" width="650">
-</p>
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c2%20operating%20point.png?raw=true)
 
 | Node | Voltage |
 |------|--------|
@@ -614,3 +610,125 @@ The drain current obtained from simulation is
 ID ≈ 200 µA
 
 which confirms that the biasing conditions are correctly established.
+
+
+---
+
+## Transient Analysis
+
+### Input Signal
+
+| Parameter | Value |
+|-----------|-------|
+| Signal Type | Sinusoidal |
+| Frequency | 1 kHz |
+| Amplitude | 10 mV |
+| DC Bias | 0.91 V |
+
+---
+
+### Input Waveform
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c2%20input%20.png?raw=true)
+
+The input signal is a small sinusoidal waveform centered around **0.91 V** with an amplitude of **10 mV**.
+
+---
+
+### Output Waveform
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c2%20output%20.png?raw=true)
+
+The output waveform shows an amplified version of the input signal.  
+The waveform is **phase inverted**, which is expected behavior for a **common-source based amplifier configuration**.
+
+---
+
+### Input and Output Waveforms
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c2%20in%20and%20out%20wave%20forms%20.png?raw=true)
+
+---
+
+### Voltage Gain Calculation
+
+Measured values from transient analysis
+
+| Parameter | Value |
+|-----------|-------|
+| Vin (peak-to-peak) | 19.16 mV |
+| Vout (peak-to-peak) | 16.38 mV |
+
+Voltage gain
+
+Av = Vout(pp) / Vin(pp)
+
+Av = 16.38 / 19.16
+
+Av ≈ 0.85 V/V
+
+
+Voltage gain in decibels
+
+Av(dB) = 20 log10(0.85)
+
+Av(dB) ≈ -1.60 dB
+
+
+---
+
+## AC Analysis
+
+<p align="center">
+<img src="c2_ac_analysis.png" width="700">
+</p>
+
+---
+
+### Frequency Response
+
+| Parameter | Value |
+|-----------|-------|
+| Midband Gain | −1.88 dB |
+| −3 dB Gain | −1.88 dB |
+| Bandwidth | 522.21 MHz |
+
+---
+
+### AC Analysis Observation
+
+The AC analysis indicates that the amplifier provides a gain close to **unity gain**, while maintaining a **very wide bandwidth** of approximately **522 MHz**.
+
+The cascode structure significantly improves the **frequency response** by reducing the **Miller capacitance effect**.
+
+---
+
+## Results Summary
+
+| Analysis | Gain (V/V) | Gain (dB) | Bandwidth |
+|---------|-----------|-----------|-----------|
+| Transient Analysis | 0.85 | −1.60 dB | — |
+| AC Analysis | — | −1.88 dB | 522.21 MHz |
+| DC Operating Point | — | — | Vout ≈ 0.96 V |
+
+---
+
+## Observations
+
+- The cascode amplifier maintains the required drain current of approximately **200 µA**.
+- The simulated output voltage is approximately **0.96 V**, which is close to the design target.
+- The voltage gain obtained is relatively small but the circuit demonstrates **very high bandwidth**.
+- The cascode configuration effectively **reduces the Miller effect**, improving high-frequency performance.
+- The amplifier remains **stable in saturation region operation**.
+
+---
+
+## Conclusion
+
+The **Cascode MOSFET amplifier** was successfully designed and simulated using **TSMC 180 nm CMOS models in LTspice**.
+
+The circuit achieves a drain current of approximately **200 µA** and provides a **wide bandwidth of approximately 522 MHz**. Although the voltage gain is close to unity, the cascode configuration significantly improves the **frequency response and output resistance**, making it suitable for **high-frequency analog applications**.
+
+The simulation results validate the theoretical design and demonstrate the advantages of the **cascode topology in modern analog integrated circuit design**.
+
+---
