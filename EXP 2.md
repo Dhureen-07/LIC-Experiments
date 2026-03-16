@@ -329,29 +329,25 @@ Av(dB) ≈ 23.73 dB
 | AC Analysis             | —          | 20.038 dB | 190.628 MHz |
 | Theoretical Calculation | 15.38      | 23.73 dB  | —           |
 
-**Observations**
+---
 
-The transient gain (19.78 dB) and AC gain (20.038 dB) are closely matched, confirming the correctness of the simulation setup.
+## Observations
 
-The theoretical gain (23.73 dB) is slightly higher than the simulated gain because theoretical models neglect several second-order MOSFET effects.
+- The transient gain (≈19.78 dB) and AC gain (≈20.04 dB) closely match, confirming correct simulation.
+- The theoretical gain (≈23.73 dB) is slightly higher because analytical models ignore second-order MOSFET effects.
+- LTspice includes channel length modulation, body effect, and parasitic capacitances, which reduce the gain slightly.
+- The designed drain current of **200 µA** was successfully achieved (simulated value ≈ **200.21 µA**), confirming accurate biasing.
+- Source degeneration (**RS = 1 kΩ**) improves stability and linearity but reduces voltage gain.
+- The amplifier shows a wide bandwidth of approximately **190 MHz**, suitable for high-frequency analog applications.
 
-LTspice simulation includes channel-length modulation, body effect, and parasitic capacitances, which slightly reduce the gain.
+---
 
-The target drain current of 200 µA was successfully achieved with a simulated value of 200.211 µA, confirming accurate biasing.
+## Conclusion
 
-The source degeneration resistor (RS = 1 kΩ) improves stability and linearity but reduces the overall voltage gain.
+The source-degenerated common source amplifier was successfully designed and simulated using **TSMC 180 nm CMOS technology in LTspice**.  
+The circuit achieves a drain current of **≈200 µA**, a midband gain of **≈20 dB**, and a **−3 dB bandwidth of approximately 190 MHz**.
 
-The amplifier demonstrates a high bandwidth of approximately 190 MHz, making it suitable for wideband analog applications.
-
-
-**Conclusion**
-
-The source-degenerated common source amplifier was successfully designed and simulated using TSMC 180 nm CMOS technology in LTspice. The circuit achieves a drain current of 200.211 µA, a midband gain of approximately 20 dB, and a −3 dB bandwidth of 190.628 MHz.
-
-The close agreement between transient and AC simulation results validates the correctness of the design methodology. The difference between theoretical and simulated gain highlights the impact of realistic MOSFET device effects included in the TSMC 180 nm model.
-
-The design demonstrates how source degeneration improves amplifier stability and linearity while maintaining a reasonable gain and wide bandwidth.
-
+The close agreement between transient and AC results validates the design. Source degeneration improves amplifier **stability and linearity** while maintaining **reasonable gain and wide bandwidth**.
 
 
 
