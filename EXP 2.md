@@ -677,58 +677,92 @@ Av(dB) ≈ -1.60 dB
 
 ---
 
+---
+
 ## AC Analysis
 
-<p align="center">
-<img src="c2_ac_analysis.png" width="700">
-</p>
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c2%20ac%20analysis.png?raw=true)
+
+The AC analysis was performed using the LTspice command
+
+.ac dec 20 1 100G
+
+This analysis determines the **frequency response and bandwidth** of the cascode amplifier.
 
 ---
 
-### Frequency Response
+### Frequency Response — LTspice Cursor Measurement
 
 | Parameter | Value |
 |-----------|-------|
-| Midband Gain | −1.88 dB |
-| −3 dB Gain | −1.88 dB |
-| Bandwidth | 522.21 MHz |
+| Cursor Frequency | 678.55 MHz |
+| Magnitude | −4.326 dB |
+| Phase | 132.63° |
+
+---
+
+### Midband Gain
+
+From the AC plot the midband gain is approximately
+
+Av ≈ -1.88 dB
+
+
+---
+
+### Bandwidth
+
+The −3 dB bandwidth occurs near
+
+f(-3dB) ≈ 678.55 MHz
+
 
 ---
 
 ### AC Analysis Observation
 
-The AC analysis indicates that the amplifier provides a gain close to **unity gain**, while maintaining a **very wide bandwidth** of approximately **522 MHz**.
+The cascode amplifier exhibits a **very wide bandwidth of approximately 678 MHz**.
 
-The cascode structure significantly improves the **frequency response** by reducing the **Miller capacitance effect**.
+This improvement in frequency response is due to the **cascode configuration**, which significantly reduces the **Miller capacitance effect** between the input and output nodes.
 
----
-
-## Results Summary
-
-| Analysis | Gain (V/V) | Gain (dB) | Bandwidth |
-|---------|-----------|-----------|-----------|
-| Transient Analysis | 0.85 | −1.60 dB | — |
-| AC Analysis | — | −1.88 dB | 522.21 MHz |
-| DC Operating Point | — | — | Vout ≈ 0.96 V |
+Although the voltage gain is relatively small, the circuit demonstrates excellent **high-frequency performance**, making it suitable for **wideband analog applications**.
 
 ---
 
-## Observations
+## Results and Conclusion
 
-- The cascode amplifier maintains the required drain current of approximately **200 µA**.
-- The simulated output voltage is approximately **0.96 V**, which is close to the design target.
-- The voltage gain obtained is relatively small but the circuit demonstrates **very high bandwidth**.
-- The cascode configuration effectively **reduces the Miller effect**, improving high-frequency performance.
-- The amplifier remains **stable in saturation region operation**.
+### Simulation Results Summary
+
+| Analysis | Parameter | Value |
+|--------|--------|--------|
+| DC Analysis | Drain Current (ID) | ≈ 200 µA |
+| DC Analysis | Output Voltage (Vout) | ≈ 0.96 V |
+| Transient Analysis | Vin(p-p) | ≈ 19.16 mV |
+| Transient Analysis | Vout(p-p) | ≈ 16.38 mV |
+| Transient Gain | Av = Vout/Vin | ≈ 0.85 V/V |
+| Gain in dB | 20 log10(Av) | ≈ −1.88 dB |
+| AC Analysis | −3 dB Bandwidth | ≈ 678.55 MHz |
+
+---
+
+### Key Observations
+
+- The cascode amplifier successfully maintains the MOSFETs in the **saturation region**, ensuring proper amplification.
+- The **drain current of approximately 200 µA** confirms correct biasing conditions.
+- Transient analysis shows a **small signal amplification with stable waveform behavior**.
+- The **cascode configuration reduces the Miller capacitance**, improving the high-frequency response.
+- AC analysis demonstrates a **very wide bandwidth of approximately 678 MHz**, which is significantly higher than a simple common source amplifier.
 
 ---
 
-## Conclusion
+### Conclusion
 
-The **Cascode MOSFET amplifier** was successfully designed and simulated using **TSMC 180 nm CMOS models in LTspice**.
+The cascode amplifier was successfully designed and simulated using **TSMC 180 nm CMOS technology in LTspice**.  
+The circuit achieves proper biasing with a drain current close to the target **200 µA** and an output voltage around **0.96 V**.
 
-The circuit achieves a drain current of approximately **200 µA** and provides a **wide bandwidth of approximately 522 MHz**. Although the voltage gain is close to unity, the cascode configuration significantly improves the **frequency response and output resistance**, making it suitable for **high-frequency analog applications**.
+Although the voltage gain is relatively small (approximately **−1.88 dB**), the cascode configuration significantly improves the **frequency response and bandwidth**, achieving a −3 dB bandwidth of approximately **678 MHz**.
 
-The simulation results validate the theoretical design and demonstrate the advantages of the **cascode topology in modern analog integrated circuit design**.
+This demonstrates that the cascode amplifier is highly suitable for **high-frequency analog applications**, where bandwidth and stability are more critical than large voltage gain.
 
 ---
+
