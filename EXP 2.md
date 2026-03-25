@@ -765,21 +765,24 @@ This demonstrates that the cascode amplifier is highly suitable for **high-frequ
 
 
 # Circuit 3  
-
+## Common-Source Amplifier with PMOS Active Load & Source Degeneration  
 ### TSMC 0.18 µm — LTspice Simulation Report  
 
 ---
 
 ## 1. Introduction  
 
-This document covers the design and simulation of a **CMOS common-source amplifier** using **TSMC 0.18 µm technology**.  
+This report presents the design and simulation of a **CMOS common-source amplifier** implemented using **TSMC 0.18 µm technology**.  
 
-The circuit uses:
-- **Source degeneration** → improves linearity and stabilizes bias  
-- **PMOS active load** → enables higher voltage gain  
+The design focuses on achieving a balance between **gain, linearity, and bias stability** using MOS-based techniques.
+
+Key techniques used:
+- **Source degeneration (M3)** → improves linearity and stabilizes operating point  
+- **PMOS active load (M2)** → provides high output resistance for better gain  
 
 ### Circuit Topology  
-- **M1 (NMOS)** → Main amplifying device (common-source)  
+
+- **M1 (NMOS)** → Main amplifying transistor (common-source stage)  
 - **M2 (PMOS)** → Diode-connected active load  
 - **M3 (NMOS)** → Diode-connected source degeneration  
 
@@ -787,24 +790,38 @@ The circuit uses:
 
 ## 2. Diode-Connected MOSFET  
 
-A diode-connected MOSFET is formed by connecting the **gate and drain together**, resulting in:  
+A diode-connected MOSFET is formed by shorting the **gate and drain terminals**, resulting in:  
 
 V_GS = V_DS  
 
 ### Key Characteristics  
+
 - Operates in **saturation region** when V_GS > V_TH  
-- Functions as a **nonlinear resistive element**  
+- Acts as a **nonlinear resistive element**  
 - Provides **self-biasing and improved stability**  
 
 ### Small-Signal Model  
+
 - Equivalent resistance ≈ **1/g_m**  
 - In parallel with **output resistance (r_o)**  
 
- Effective resistance ≈ **1/g_m**  
+👉 Effective resistance ≈ **1/g_m**  
 
- ## 3. Design Specifications
+---
 
-<img 
+## 3. Design Specifications  
+
+The circuit is designed under the following conditions:
+
+- **Technology:** TSMC 0.18 µm CMOS  
+- **Supply Voltage (VDD):** 1.2 V  
+- **Target Drain Current (ID):** ~200 µA  
+- **Input Signal:** Small-signal sine wave (~10 mV amplitude)  
+- **Biasing:** DC bias ensures saturation operation  
+
+### Circuit Schematic  
+
+![Circuit Diagram](./Screenshot%202026-03-25%20232934.png)
 
 | Parameter | Symbol | Value |
 |-----------|--------|-------|
@@ -824,7 +841,7 @@ V_GS = V_DS
 ### 3.5 Operating Point (Simulation Results)
 
 
-<image>
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20dc%20operating%20point.png?raw=true)
 
 
 | Node/Device | Parameter | Simulated Value |
@@ -989,7 +1006,7 @@ The signal is **phase inverted**, confirming common-source operation.
 
 ### Input and Output Waveforms  
 
-![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20both.png?raw=true)
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20both%20.png?raw=true)
 
 The output waveform is an **amplified and inverted version** of the input, centered around the DC operating point.  
 This verifies proper biasing and expected amplifier behavior.
@@ -1065,6 +1082,10 @@ f3dB (approx)    ≈ 396 MHz
 ---
 
 ### 8.3 Unity Gain Bandwidth (UGB)
+
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20unity%20gain%20.png?raw=true)
+
 
 ```
 UGB ≈ Gain × Bandwidth  
