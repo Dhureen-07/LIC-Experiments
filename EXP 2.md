@@ -1049,7 +1049,7 @@ Av (practical) = (202.13 mV / 2) / 10 mV
 
 ## 8. AC Analysis (Frequency Response)
 
-<img width="2999" height="1617" alt="AC Response" src="https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20ac.png?raw=true" />
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20ac%20analysis%20.png?raw=true)
 
 **Simulation:** `.ac dec 10 100 10G` | Input: `AC 1`
 
@@ -1147,3 +1147,52 @@ UGB ≈ Gain × Bandwidth
 - Unequal sizing of M1, M2, and M3 ensures a balance between **gain, stability, and linearity**.  
 
 ---
+
+
+  
+## Full Comparison — All 3 Circuits
+
+
+| Category         | Parameter                   | Circuit 1: CS + RS       | Circuit 2: Cascode         | Circuit 3: CS + Active Load + Degeneration    |
+| ---------------- | --------------------------- | ------------------------ | -------------------------- | --------------------------------------------- |
+| **Topology**     | Type                        | Common Source + Resistor | Cascode (CS + CG)          | Common Source + PMOS load + NMOS degeneration |
+|                  | Devices                     | NMOS + PMOS + RS         | M1, M2, M3                 | M1, M2, M3                                    |
+|                  | Load                        | Resistive                | Active (cascode)           | Active (PMOS diode)                           |
+|                  | Degeneration                | External RS              | No                         | Internal (M3 diode)                           |
+|                  | Complexity                  | Medium                   | High                       | High                                          |
+| **Design**       | Technology                  | 180 nm                   | 180 nm                     | 180 nm                                        |
+|                  | VDD                         | 1.2 V                    | 1.2 V                      | 1.2 V                                         |
+|                  | ID                          | 200 µA                   | 200 µA                     | 200 µA                                        |
+|                  | VOV                         | 0.25 V                   | 0.25 V                     | 0.2 V                                         |
+|                  | Power                       | 0.24 mW                  | 0.24 mW                    | 0.24 mW                                       |
+| **Biasing**      | Vout (DC)                   | ~0.8 V                   | ~0.96 V                    | ~0.59–0.76 V                                  |
+|                  | Vin bias                    | ~0.81 V                  | ~0.91 V                    | ~1.12 V                                       |
+|                  | Source Voltage              | 0.2 V                    | ~0.3 V                     | ~0.53 V                                       |
+|                  | Saturation                  | ✅                        | ✅                          | ✅                                             |
+|                  | Symmetry                    | Good                     | Less symmetric             | Good                                          |
+| **Sizing**       | NMOS W                      | 36.3 µm                  | ~10 µm                     | 47 µm                                         |
+|                  | PMOS W                      | 36.3 µm                  | 4.62 µm                    | 38.7 µm                                       |
+|                  | Degeneration device         | RS = 1kΩ                 | Current source (M3)        | M3 = 27 µm                                    |
+| **Small Signal** | gm                          | 1.6 mS                   | ~1.6 mS                    | ~2 mS                                         |
+|                  | ro                          | ~50 kΩ                   | High (cascode boosted)     | ~50 kΩ                                        |
+|                  | Gain equation               | -gm·Rout/(1+gmRS)        | -gm·ro² (boosted)          | -gm·ro/(1+gm/gm3)                             |
+| **Gain (V/V)**   | Theoretical                 | 15.38                    | High (not explicitly calc) | 50                                            |
+|                  | Practical (Transient)       | 9.75                     | 0.85                       | ~10.1                                         |
+| **Gain (dB)**    | Theoretical                 | 23.7 dB                  | —                          | 33.97 dB                                      |
+|                  | AC Midband                  | ~20 dB                   | -1.88 dB                   | ~20.87 dB                                     |
+|                  | Error (Theory vs Practical) | Moderate                 | High deviation             | Very high deviation                           |
+| **Bandwidth**    | f₋3dB                       | ~190 MHz                 | ~678 MHz                   | ~396 MHz                                      |
+|                  | UGB                         | —                        | —                          | ~4.38 GHz                                     |
+|                  | HF Performance              | Good                     | Excellent                  | Very Good                                     |
+| **Transient**    | Vin (p-p)                   | 20 mV                    | ~19 mV                     | 20 mV                                         |
+|                  | Vout (p-p)                  | 195 mV                   | ~16 mV                     | ~202 mV                                       |
+|                  | Phase                       | Inverted                 | Inverted                   | Inverted                                      |
+| **Linearity**    | Distortion                  | Low (due to RS)          | Moderate                   | Very low                                      |
+| **Stability**    | Bias Stability              | High                     | Medium                     | Very High                                     |
+|                  | Sensitivity to variation    | Low                      | High                       | Very Low                                      |
+| **Trade-offs**   | Gain                        | Medium                   | Very Low                   | Medium-High                                   |
+|                  | Bandwidth                   | Medium                   | Very High                  | High                                          |
+|                  | Linearity                   | High                     | Medium                     | Very High                                     |
+|                  | Design Difficulty           | Medium                   | High                       | High                                          |
+| **Use Case**     | Best for                    | General amplifiers       | High-frequency circuits    | Precision analog / stable amplifiers          |
+
