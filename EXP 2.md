@@ -821,7 +821,7 @@ The circuit is designed under the following conditions:
 
 ### Circuit Schematic  
 
-![Circuit Diagram](./Screenshot%202026-03-25%20232934.png)
+![image alt]()
 
 | Parameter | Symbol | Value |
 |-----------|--------|-------|
