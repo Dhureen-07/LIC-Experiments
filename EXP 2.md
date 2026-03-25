@@ -762,3 +762,367 @@ This demonstrates that the cascode amplifier is highly suitable for **high-frequ
 
 ---
 
+
+
+# Circuit 3  
+
+### TSMC 0.18 µm — LTspice Simulation Report  
+
+---
+
+## 1. Introduction  
+
+This document covers the design and simulation of a **CMOS common-source amplifier** using **TSMC 0.18 µm technology**.  
+
+The circuit uses:
+- **Source degeneration** → improves linearity and stabilizes bias  
+- **PMOS active load** → enables higher voltage gain  
+
+### Circuit Topology  
+- **M1 (NMOS)** → Main amplifying device (common-source)  
+- **M2 (PMOS)** → Diode-connected active load  
+- **M3 (NMOS)** → Diode-connected source degeneration  
+
+---
+
+## 2. Diode-Connected MOSFET  
+
+A diode-connected MOSFET is formed by connecting the **gate and drain together**, resulting in:  
+
+V_GS = V_DS  
+
+### Key Characteristics  
+- Operates in **saturation region** when V_GS > V_TH  
+- Functions as a **nonlinear resistive element**  
+- Provides **self-biasing and improved stability**  
+
+### Small-Signal Model  
+- Equivalent resistance ≈ **1/g_m**  
+- In parallel with **output resistance (r_o)**  
+
+ Effective resistance ≈ **1/g_m**  
+
+ ## 3. Design Specifications
+
+<img 
+
+| Parameter | Symbol | Value |
+|-----------|--------|-------|
+| Drain Current | I_D | 200 µA |
+| Overdrive Voltage | V_OV | 0.2 V |
+| Supply Voltage | V_DD | 1.2 V |
+| NMOS Threshold | V_THn | 0.366 V |
+| PMOS Threshold | \|V_THp\| | 0.39 V |
+| Channel Length Modulation | λ | 0.1 V⁻¹ |
+| Channel Length | L | 0.18 µm |
+| NMOS Mobility | µn | 273.809 cm²/Vs |
+| PMOS Mobility | µp | 115.689 cm²/Vs |
+| Oxide Thickness | T_ox | 4.1 nm |
+| Relative Permittivity | εr | 3.9 |
+
+
+### 3.5 Operating Point (Simulation Results)
+
+
+<image>
+
+
+| Node/Device | Parameter | Simulated Value |
+|-------------|----------|-----------------|
+| V(n001) | VDD | 1.2 V |
+| V(n002) | Bias Voltage | 0.56 V |
+| V(n003) | Bias Node | 1.2 V |
+| V(n004) | Source Voltage (M1) | 0.536 V |
+| V(vin) | Input Voltage | 1.22 V |
+| V(vout) | Output Voltage | 0.5901 V |
+| Id(M1) | Drain Current M1 | 200.66 µA |
+| Id(M2) | Drain Current M2 | -200.66 µA |
+| Id(M3) | Drain Current M3 | 200.66 µA |
+
+
+## 4. Device Width Calculation
+
+### 4.1 Theoretical Width Formula
+
+From the saturation drain current equation:
+
+```
+ID = (1/2) µ Cox (W/L) VOV²
+
+W = (2 ID L) / (µ Cox VOV²)
+```
+
+### 4.2 NMOS Width (M1 and M3) — VOV = 0.2 V
+
+```
+Wn = (2 × 200×10⁻⁶ × 0.18×10⁻⁶) / (0.02738 × 8.42×10⁻³ × (0.2)²)
+
+Numerator   = 7.2×10⁻¹¹
+Denominator = 9.22×10⁻⁶
+
+Wn ≈ 7.81 µm  (theoretical)
+```
+
+> Note: Theoretical calculation gives a minimum device size. In simulation, larger widths are used to set the correct bias point and current.
+
+### 4.3 PMOS Width (M2) — VOV = 0.2 V
+
+```
+Wp = (2 × 200×10⁻⁶ × 0.18×10⁻⁶) / (0.01157 × 8.42×10⁻³ × (0.2)²)
+
+Numerator   = 7.2×10⁻¹¹
+Denominator = 3.90×10⁻⁶
+
+Wp ≈ 18.5 µm  (theoretical)
+
+```
+
+> Note: Theoretical calculation gives a minimum device size. In simulation, larger widths are used to set the correct bias point and current.
+
+### 4.3 PMOS Width (M2) — VOV = 0.2 V
+
+```
+Wp = (2 × 200×10⁻⁶ × 0.18×10⁻⁶) / (0.01157 × 8.42×10⁻³ × (0.2)²)
+
+Numerator   = 7.2×10⁻¹¹
+Denominator = 3.90×10⁻⁶
+
+Wp ≈ 18.5 µm  (theoretical)
+```
+
+### 4.4 Final Device Sizing — Simulation-Optimized (Trial & Error)
+
+The theoretical widths were used as a starting point. Final widths were iteratively tuned in LTspice to achieve the target I_D = 200 µA, correct DC operating point, and symmetric operation.
+
+| Transistor | Role | Theoretical W (µm) | Final W (µm) | L (µm) |
+|------------|------|--------------------|--------------|--------|
+| M1 (NMOS) | Common-source amplifier | 7.81 | 47 | 0.18 |
+| M2 (PMOS) | Active load (diode-connected) | 18.5 | 38.7 | 0.18 |
+| M3 (NMOS) | Source degeneration (diode-connected) | 7.81 | 27 | 0.18 |
+
+**Key Observations:**
+
+- The final widths are significantly higher than theoretical values, indicating that practical TSMC model behavior requires **larger device sizing to achieve the target current**.
+
+- M1 (47 µm) is sized larger than M3 (27 µm), ensuring **strong amplification while maintaining controlled source degeneration**.
+
+- M2 (38.7 µm) provides an effective active load, helping achieve a **balanced output voltage (~0.59 V)** close to mid-supply.
+
+- The drain currents (~200.66 µA) across M1, M2, and M3 confirm **proper current mirroring and bias consistency**.
+
+- The output voltage being near half of VDD indicates **good biasing and symmetric signal swing capability**.
+
+- Source degeneration via M3 improves **stability and linearity**, even though it slightly reduces gain.
+
+
+## 5. Small-Signal Analysis  
+
+### 5.1 Transconductance (g_m)
+
+```
+g_m = 2I_D / V_OV  
+    = (2 × 200×10⁻⁶) / 0.2  
+    = 2 mS
+```
+
+---
+
+### 5.2 Output Resistance (r_o)
+
+```
+r_o = 1 / (λ I_D)  
+    = 1 / (0.1 × 200×10⁻⁶)  
+    = 50 kΩ
+```
+
+---
+
+### 5.3 Voltage Gain (Theoretical)
+
+Considering source degeneration due to diode-connected M3  
+(effective resistance ≈ 1/g_m3):
+
+```
+A_v = − (g_m1 × r_o2) / (1 + g_m1/g_m3)  
+    = − (2 mS × 50 kΩ) / (1 + 1)  
+    = − 50 V/V
+```
+
+```
+|A_v| = 50 V/V  
+Gain (dB) = 20 log(50) = 33.97 dB
+```
+
+---
+
+## 6. DC Transfer Characteristic  
+
+<img width="2982" height="746" alt="DC Transfer Curve" src="https://github.com/user-attachments/assets/3d79393e-33bf-479d-a17d-05f77b2756e6" />
+
+The DC sweep (V₃: 0 → 2 V) illustrates the input–output relationship of the amplifier.
+
+- Linear operating region: **~0.9 V to 1.2 V (input)**  
+- Output swing: **~1.17 V → ~0.56 V**  
+- Midpoint corresponds to the **quiescent bias point**
+
+This confirms that the circuit is properly biased for **maximum symmetrical signal swing**.
+
+
+## 7. Transient Analysis  
+
+### Input Waveform  
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20input.png?raw=true)
+
+The input is a small sinusoidal signal centered around **~1.12 V** with an amplitude of approximately **±10 mV**.
+
+---
+
+### Output Waveform  
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20output.png?raw=true)
+
+The output signal varies between **~0.67 V and ~0.88 V** (≈ **200 mV peak-to-peak**), showing clear amplification.  
+The signal is **phase inverted**, confirming common-source operation.
+
+---
+
+### Input and Output Waveforms  
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20both.png?raw=true)
+
+The output waveform is an **amplified and inverted version** of the input, centered around the DC operating point.  
+This verifies proper biasing and expected amplifier behavior.
+
+
+### 7.1 Simulation Cursor Readings  
+
+| Cursor | Time | V(vout) |
+|--------|------|---------|
+| Cursor 1 (min) | 2.2566 ms | 674.23 mV |
+| Cursor 2 (max) | 2.7516 ms | 876.36 mV |
+| Difference (Δ) | 0.4951 ms | 202.13 mV |
+
+---
+
+### 7.2 Practical Gain Calculation  
+
+```
+ΔVout = 876.36 − 674.23 = 202.13 mV  (peak-to-peak)
+
+Vin amplitude = 10 mV  
+
+Av (practical) = (202.13 mV / 2) / 10 mV  
+               ≈ 10.1 V/V
+```
+
+---
+
+### 7.3 Gain Comparison  
+
+| Parameter | Theoretical | Practical (Simulation) |
+|-----------|-------------|------------------------|
+| Av (V/V) | 50 V/V | ~10.1 V/V |
+| Av (dB) | 33.97 dB | ~20.08 dB |
+
+---
+
+> The reduced gain compared to theory is mainly due to non-ideal effects such as finite output resistance (r_o), channel-length modulation, and the impact of source degeneration.
+
+
+## 8. AC Analysis (Frequency Response)
+
+<img width="2999" height="1617" alt="AC Response" src="https://github.com/Dhureen-07/LIC-Experiments/blob/main/c3%20ac.png?raw=true" />
+
+**Simulation:** `.ac dec 10 100 10G` | Input: `AC 1`
+
+---
+
+### 8.1 Bode Plot Cursor Readings
+
+| Cursor | Frequency | Magnitude | Phase | Group Delay |
+|--------|-----------|-----------|-------|-------------|
+| Cursor 1 (−3 dB region) | 396.59 MHz | 17.81 dB | −130.27° | 230.77 ps |
+| Cursor 2 (midband) | 994.94 kHz | 20.87 dB | 179.84° | 437.85 ps |
+
+---
+
+### 8.2 Key Frequency Parameters
+
+```
+Midband gain     = 20.87 dB  
+3 dB level       = 20.87 − 3 = 17.87 dB  
+f3dB (approx)    ≈ 396 MHz
+```
+
+| Parameter | Value |
+|-----------|-------|
+| Midband Gain | 20.87 dB (≈ 11.05 V/V) |
+| Lower Cutoff Frequency (fL) | ~0 Hz (DC coupled) |
+| Upper Cutoff Frequency (fH) | ~396 MHz |
+| Bandwidth | ~396 MHz |
+
+---
+
+### 8.3 Unity Gain Bandwidth (UGB)
+
+```
+UGB ≈ Gain × Bandwidth  
+    ≈ 11.05 × 396 MHz  
+    ≈ 4.38 GHz
+```
+
+| Parameter | Value |
+|-----------|-------|
+| Unity Gain Bandwidth (UGB) | ~4.38 GHz |
+
+---
+
+### 8.4 Summary
+
+- High midband gain (~20.87 dB) confirms strong amplification  
+- Bandwidth limited to ~396 MHz due to parasitic effects  
+- UGB in GHz range indicates good high-frequency performance  
+
+
+## 9. Summary of Results  
+
+| Analysis | Parameter | Value |
+|----------|-----------|-------|
+| DC | Input bias (Vin) | ~1.12 V |
+| DC | Output bias (Vout) | ~0.762 V |
+| DC | Drain current (ID) | ~200.46 µA |
+| DC | Source voltage (VS1) | ~0.569 V |
+| Small-Signal | gm | ~2 mS |
+| Small-Signal | ro | ~50 kΩ |
+| Gain | Theoretical | 50 V/V (33.97 dB) |
+| Gain | Practical (Transient) | ~10.1 V/V (~20.08 dB) |
+| Gain | AC Midband Gain | ~20.87 dB |
+| Frequency | fH (3 dB bandwidth) | ~396 MHz |
+| Frequency | Unity Gain Bandwidth (UGB) | ~4.38 GHz |
+| Sizing | W(M1) | 47 µm |
+| Sizing | W(M2) | 38.7 µm |
+| Sizing | W(M3) | 27 µm |
+
+---
+
+## 10. Key Observations  
+
+- The DC operating point confirms **proper biasing near mid-supply**, enabling symmetric signal swing.  
+
+- The practical gain (~10 V/V) is lower than theoretical due to:
+  - Finite output resistance (r_o)  
+  - Channel-length modulation  
+  - Source degeneration effect  
+
+- The AC midband gain (~20.87 dB) closely matches the transient-based gain, validating consistency.  
+
+- The bandwidth (~396 MHz) is limited by **parasitic capacitances at the output node**.  
+
+- The unity gain bandwidth (~4.38 GHz) indicates **good high-frequency performance**.  
+
+- Larger device widths (compared to theoretical) are required to achieve the target current due to **short-channel effects in 0.18 µm technology**.  
+
+- Unequal sizing of M1, M2, and M3 ensures a balance between **gain, stability, and linearity**.  
+
+---
