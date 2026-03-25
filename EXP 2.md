@@ -821,7 +821,7 @@ The circuit is designed under the following conditions:
 
 ### Circuit Schematic  
 
-![image alt]()
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/l.png?raw=true)
 
 | Parameter | Symbol | Value |
 |-----------|--------|-------|
