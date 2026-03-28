@@ -136,7 +136,7 @@ The single-ended output resistance seen at each drain is simply $R_D$, which lim
 
 ## Circuit Diagram
 
-![image alt]()
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d1%20circuit.png?raw=true)
 
 ### 1.2 DC Analysis — Design Parameters
 
@@ -282,7 +282,7 @@ To satisfy $V_P = V_S = -0.7\ \text{V}$ precisely, the width was fine-tuned in s
 
 ## DC Analysis
 
-![image alt]()
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d1%20operating%20point.png?raw=true)
 
 #### 1.2.f Input Common-Mode Range (ICMR)
 
@@ -375,7 +375,7 @@ $$|v_{id}| < \sqrt{2}\,V_{ov} = \sqrt{2} \times 0.34 = 0.48\ \text{V}$$
 
 $$v_{id} = 200\ \text{mV} < 480\ \text{mV} \checkmark$$
 
-![Linear Transient](images/d1_200m.png)
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d1%20200m.png?raw=true)
 
 **Observations:**
 - Output waveform is sinusoidal with no visible distortion
@@ -391,9 +391,36 @@ $$|A_v| = \frac{V_{out,peak}}{V_{in,peak}} = \frac{600\ \text{mV}}{200\ \text{mV
 
 #### Case 2: Non-Linear Region — $v_{id} = 600\ \text{mV}$
 
+### 1.3 Transient Analysis — Linearity Observation
+
+Three input amplitude conditions are tested to characterize the linear operating boundary.
+
+| Case | Input $v_{id}$ | Condition | Waveform |
+|---|---|---|---|
+| Linear (small-signal) | 50 mV | $v_{id} \ll \sqrt{2}\,V_{ov}$ | 
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d1%20transient%20.png?raw=true)
+
+| Linear (near boundary) | 200 mV | $v_{id} < \sqrt{2}\,V_{ov}$ | 
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d1%20200m.png?raw=true)
+
+| Non-Linear (overdrive) | 600 mV | $v_{id} > \sqrt{2}\,V_{ov}$ |
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d1%20600m.png?raw=true)
+
+
+**50 mV** — Output is a clean sinusoid well within the linear region; gain is constant and both
+transistors share current equally.
+
+**200 mV** — Output remains sinusoidal but with higher amplitude; amplifier is still linear,
+approaching the boundary of $\sqrt{2}\,V_{ov} = 0.48\ \text{V}$.
+
+**600 mV** — Output is severely clipped and distorted; one transistor enters cutoff, confirming
+non-linear operation beyond the theoretical linear range.
+
 $$v_{id} = 600\ \text{mV} > 480\ \text{mV}$$
 
-![Non-Linear Transient](images/d1_600m.png)
 
 **Observations:**
 - Output waveform is severely clipped — flat tops and bottoms near supply rails
@@ -420,7 +447,7 @@ $$v_{id} = 600\ \text{mV} > 480\ \text{mV}$$
 
 ### 1.4 AC Analysis — Frequency Response
 
-![AC Analysis](images/d1_ac_analysis.png)
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d1%20ac%20analysis.png?raw=true)
 
 **Simulated Results (from LTspice cursor):**
 
