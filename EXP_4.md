@@ -733,6 +733,10 @@ Beyond this, one transistor cuts off and the amplifier enters non-linear operati
 
 ---
 
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d2%20circuit%20.png?raw=true)
+
+
 ### Given Specifications
 
 | Parameter | Value |
@@ -816,6 +820,9 @@ $$V_{DS} > V_{ov} \implies 0.6732\ \text{V} > 0.34\ \text{V} \checkmark$$
 
 > **Key Point:** Both M1 and M2 operate in saturation, confirming valid
 > small-signal differential amplification at the chosen bias point.
+
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/dc%20operating%20point%20.png?)
 
 **DC Operating Point Summary:**
 
@@ -1045,8 +1052,15 @@ operating boundary.
 
 | Case | Input $v_{id}$ | Condition | Waveform |
 |---|---|---|---|
-| Linear (small-signal) | 50 mV | $v_{id} \ll \sqrt{2}\,V_{ov}$ | ![50mV](images/d2_50m.png) |
-| Non-Linear (overdrive) | 600 mV | $v_{id} > \sqrt{2}\,V_{ov}$ | ![600mV](images/d2_600m.png) |
+| Linear (small-signal) | 50 mV | $v_{id} \ll \sqrt{2}\,V_{ov}$ | 
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d2%2050m.png?raw=true)
+
+| Non-Linear (overdrive) | 600 mV | $v_{id} > \sqrt{2}\,V_{ov}$ | 
+
+
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d2%20600m.png?raw=true)
+
 
 **50 mV** — Output is a clean sinusoidal waveform with peak amplitude
 $\approx 220\ \text{mV}$, well within the linear region. Both transistors
@@ -1066,7 +1080,7 @@ half-cycle, confirming non-linear operation beyond $\pm 0.48\ \text{V}$.
 
 #### Simulated Gain (Transient)
 
-![Transient 50mV](images/d2_50m.png)
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d2%2050m.png?raw=true)
 
 Input signal parameters:
 
@@ -1204,8 +1218,7 @@ reducing the observed midband gain.
 
 ### 2.5 AC Analysis — Frequency Response
 
-![AC Analysis](images/d2_ac_analysis.png)
-![AC -3dB Cursor](images/d2_ac_analysis-3db.png)
+![image alt](https://github.com/Dhureen-07/LIC-Experiments/blob/main/d2%20ac%20analysis.png?raw=true)
 
 **From LTspice cursors:**
 
