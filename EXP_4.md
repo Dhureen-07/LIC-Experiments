@@ -1354,5 +1354,75 @@ $1.3585\ \text{GHz}$, limiting the bandwidth compared to Circuit 1 ($5.503\ \tex
 
 
 
+## Comparison — Circuit 1 vs Circuit 2
 
+### Performance Summary
+
+| Parameter | Circuit 1 (Resistive Load) | Circuit 2 (PMOS Active Load) |
+|---|---|---|
+| Load Type | Resistive ($R_D = 2.25\ \text{k}\Omega$) | PMOS Current Mirror (M3, M4) |
+| Tail Current Source | Ideal current source | NMOS transistor M5 |
+| $I_{SS}$ | 0.833 mA | 0.833 mA (design) |
+| $I_D$ per transistor | 0.4165 mA | 0.4165 mA (design) |
+| $V_P$ | -0.7 V | -0.7 V |
+| $V_{ov}$ | 0.34 V | 0.34 V |
+| $g_m$ (theoretical) | 2.45 mA/V | 2.45 mA/V |
+| $R_{out}$ (theoretical) | 1.89 kΩ | 12.0 kΩ |
+| Power | 1.5 mW | 1.5 mW |
+
+---
+
+### Gain Comparison
+
+| Parameter | Circuit 1 | Circuit 2 |
+|---|---|---|
+| Theoretical Gain (V/V) | 4.63 | 29.4 |
+| Theoretical Gain (dB) | 13.31 dB | 29.36 dB |
+| AC Simulated Gain (dB) | 11.00 dB | 9.59 dB |
+| Transient Gain (dB) | 15.62 dB | 12.46 dB |
+
+---
+
+### Frequency Response Comparison
+
+| Parameter | Circuit 1 | Circuit 2 |
+|---|---|---|
+| Midband Gain | 11.00 dB (3.55 V/V) | 9.59 dB (3.02 V/V) |
+| $f_{-3dB}$ | 5.503 GHz | 1.3585 GHz |
+| Bandwidth | 5.503 GHz | 1.3585 GHz |
+| UGB (exact) | 18.75 GHz | 3.87 GHz |
+
+---
+
+### Operating Range Comparison
+
+| Parameter | Circuit 1 | Circuit 2 |
+|---|---|---|
+| ICMR | -0.34 V to 0.36 V | -0.34 V to 0.39 V |
+| OCMR | -0.36 V to 0.9 V | -0.36 V to 0.65 V |
+| Linear $v_{id}$ range | ±0.48 V | ±0.48 V |
+
+---
+
+### Key Observations
+
+| Aspect | Circuit 1 | Circuit 2 |
+|---|---|---|
+| Gain advantage | Moderate — limited by $R_D$ | Higher — active load raises $R_{out}$ by $6.3\times$ |
+| Bandwidth advantage | Wide — $5.503\ \text{GHz}$ | Narrower — $1.3585\ \text{GHz}$ |
+| Output swing | Symmetric clipping at $\pm V_{DD}$ | Asymmetric clipping due to mirror |
+| Complexity | Low — two NMOS + resistors | Higher — five transistors |
+| Power efficiency | Moderate — $R_D$ dissipates power | Better — no resistive drop |
+
+> **Key Point:** Circuit 1 and Circuit 2 demonstrate the classical
+> **gain-bandwidth tradeoff** in differential amplifier design. Circuit 1
+> achieves a wider bandwidth of $5.503\ \text{GHz}$ at the cost of moderate
+> theoretical gain ($13.31\ \text{dB}$), while Circuit 2 theoretically achieves
+> $29.36\ \text{dB}$ gain at the cost of reduced bandwidth ($1.3585\ \text{GHz}$).
+> The active load in Circuit 2 raises $R_{out}$ from $1.89\ \text{k}\Omega$ to
+> $12.0\ \text{k}\Omega$ — a $6.3\times$ improvement — directly translating to
+> higher theoretical gain. The lower simulated gain of Circuit 2 ($9.59\ \text{dB}$)
+> compared to Circuit 1 ($11\ \text{dB}$) is attributed to M5 settling at a lower
+> operating current in the TSMC 180nm model, which is a practical limitation of
+> the active current source topology at short channel lengths.
 
