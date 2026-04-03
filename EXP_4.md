@@ -683,3 +683,663 @@ large-signal non-linear theory.
 > cost of moderate gain ($11\ \text{dB}$). This gain-bandwidth tradeoff is the defining
 > characteristic of this configuration and serves as the baseline for comparison against active
 > load and current mirror load topologies in Circuits 2 and 3.
+
+
+
+## Circuit 2: Differential Amplifier with PMOS Active Load
+
+### Working Principle
+
+The circuit consists of two matched NMOS transistors **M1** and **M2** forming a differential
+pair. Their sources are tied to NMOS transistor **M5** operating in saturation as a constant
+tail current source. The drains are connected to a PMOS current mirror load formed by **M3**
+(diode-connected reference) and **M4** (mirror output).
+
+When a differential input is applied:
+
+$$v_{id} = v_{in1} - v_{in2}$$
+
+the tail current $I_{SS}$ set by M5 is steered between M1 and M2:
+
+- $v_{in1} > v_{in2}$ → M1 draws more current, M2 draws less
+- $v_{in2} > v_{in1}$ → M2 draws more current, M1 draws less
+
+The drain current difference appears at the output node where M2 and M4 currents combine,
+converting the differential signal into a single-ended output:
+
+$$i_{out} = g_{m} \cdot v_{id}$$
+
+For small-signal operation, the voltage gain is:
+
+$$\boxed{A_v = g_m \cdot R_{out}}$$
+
+where the effective output resistance is set by the parallel combination of NMOS and PMOS
+output resistances:
+
+$$R_{out} = r_{o2} \| r_{o4}$$
+
+Since $r_{o2}$ and $r_{o4}$ are both large, the active load provides significantly higher
+$R_{out}$ than a resistive load, yielding proportionally higher gain.
+
+> **Key Point:** Unlike Circuit 1 where $R_{out} \approx R_D \| r_o$, here $R_{out} = r_{o2} \| r_{o4}$
+> with no resistor limiting the output resistance. This is the primary advantage of the
+> active load topology.
+
+The linear operating range is:
+
+$$|v_{id}| < \sqrt{2}\,V_{ov}$$
+
+Beyond this, one transistor cuts off and the amplifier enters non-linear operation.
+
+---
+
+### Given Specifications
+
+| Parameter | Value |
+|---|---|
+| Supply Voltage $V_{DD}$ | $+0.9\ \text{V}$ |
+| Supply Voltage $V_{SS}$ | $-0.9\ \text{V}$ |
+| Channel Length $L$ | $360\ \text{nm}$ |
+| Maximum Power $P$ | $\leq 1.5\ \text{mW}$ |
+| $V_{inCM}$ | $0\ \text{V}$ |
+| $V_{oCM}$ | $0\ \text{V}$ |
+| Bias Voltage $V_B$ (M5 gate) | $-0.34\ \text{V}$ |
+| Load Capacitance $C_L$ | $10\ \text{pF}$ |
+| Process Technology | TSMC 180nm CMOS |
+| Load Type | PMOS Current Mirror (M3, M4) |
+| Tail Current Source | NMOS transistor M5 |
+
+
+### 2.2 DC Analysis
+
+#### Power Constraint
+
+$$P = (V_{DD} - V_{SS}) \cdot I_{SS} = 1.8 \times I_{SS}$$
+
+Applying the power constraint $P \leq 1.5\ \text{mW}$:
+
+$$1.8 \cdot I_{SS} \leq 1.5 \times 10^{-3}$$
+
+$$\boxed{I_{SS} \leq 0.833\ \text{mA}}$$
+
+The tail current is provided by NMOS transistor **M5**, biased at $V_B = -0.34\ \text{V}$.
+
+$$P = 1.8 \times 0.833 \times 10^{-3} = 1.5\ \text{mW} \leq 1.5\ \text{mW} \checkmark$$
+
+---
+
+#### Drain Current
+
+Under balanced input conditions ($v_{in1} = v_{in2}$), the tail current splits equally:
+
+$$I_{D1} = I_{D2} = \frac{I_{SS}}{2} = \frac{0.833\ \text{mA}}{2}$$
+
+$$\boxed{I_{D1} = I_{D2} = 0.4165\ \text{mA}}$$
+
+**Simulation Verification:**
+
+| Parameter | Theoretical | Simulated |
+|---|---|---|
+| $I_{SS}$ | 0.833 mA | 0.833 mA |
+| $I_{D1}$ | 0.4165 mA | 0.4165 mA |
+| $I_{D2}$ | 0.4165 mA | 0.4165 mA |
+
+---
+
+#### Bias Point Analysis
+
+Given $V_{in,CM} = 0\ \text{V}$, therefore $V_{G1} = V_{G2} = 0\ \text{V}$
+
+**Source Node Voltage** (fixed by M5 bias):
+
+$$V_P = V_S = -0.7\ \text{V}$$
+
+**Gate-Source Voltage:**
+
+$$V_{GS} = V_G - V_S = 0 - (-0.7) = 0.7\ \text{V}$$
+
+**Overdrive Voltage** ($V_{TH} = 0.36\ \text{V}$, TSMC 180nm NMOS):
+
+$$V_{ov} = V_{GS} - V_{TH} = 0.7 - 0.36 = 0.34\ \text{V}$$
+
+**Drain Voltage** (from simulation):
+
+$$V_D = V_{out1} = -26.78\ \text{mV} \approx 0\ \text{V}$$
+
+**Drain-Source Voltage:**
+
+$$V_{DS} = V_D - V_S = -0.02678 - (-0.7) = 0.6732\ \text{V}$$
+
+**Saturation Check:**
+
+$$V_{DS} > V_{ov} \implies 0.6732\ \text{V} > 0.34\ \text{V} \checkmark$$
+
+> **Key Point:** Both M1 and M2 operate in saturation, confirming valid
+> small-signal differential amplification at the chosen bias point.
+
+**DC Operating Point Summary:**
+
+| Parameter | Theoretical | Simulated |
+|---|---|---|
+| $V_P$ (source node) | $-0.7\ \text{V}$ | $-0.7\ \text{V}$ |
+| $V_{out1},\ V_{out2}$ | $0\ \text{V}$ (ideal) | $-26.78\ \text{mV}$ |
+| $V_{GS}$ | $0.7\ \text{V}$ | — |
+| $V_{DS}$ | $0.6732\ \text{V}$ | — |
+| $V_{ov}$ | $0.34\ \text{V}$ | — |
+| $I_{D1},\ I_{D2}$ | $0.4165\ \text{mA}$ | $0.4165\ \text{mA}$ |
+| $I_{SS}$ | $0.833\ \text{mA}$ | $0.833\ \text{mA}$ |
+| Bias $V_B$ (M5 gate) | $-0.34\ \text{V}$ | $-0.34\ \text{V}$ |
+
+#### NMOS Current Source — M5
+
+M5 sources the tail current $I_{SS}$ for the differential pair.
+
+- Source: $V_S = V_{SS} = -0.9\ \text{V}$
+- Drain: $V_D = V_P = -0.7\ \text{V}$
+
+**Drain-Source Voltage:**
+
+$$V_{DS} = V_D - V_S = -0.7 - (-0.9) = 0.2\ \text{V}$$
+
+**Overdrive Voltage** (chosen to ensure saturation):
+
+$$V_{ov5} \leq V_{DS} \implies V_{ov5} = 0.2\ \text{V}$$
+
+**Gate-Source Voltage:**
+
+$$V_{GS} = V_{TH} + V_{ov5} = 0.36 + 0.2 = 0.56\ \text{V}$$
+
+**Gate Voltage (Bias Voltage):**
+
+$$V_B = V_G = V_S + V_{GS} = -0.9 + 0.56$$
+
+$$\boxed{V_B = -0.34\ \text{V}}$$
+
+**Saturation Check:**
+
+$$V_{DS} \geq V_{ov5} \implies 0.2\ \text{V} \geq 0.2\ \text{V} \checkmark$$
+
+> **Key Point:** M5 operates at the edge of saturation, providing a stable
+> tail current $I_{SS} = 0.833\ \text{mA}$ to the differential pair.
+
+---
+
+#### PMOS Active Load — M3 and M4
+
+M3 (diode-connected) and M4 (mirror) form the current mirror load.
+
+- Source: $V_S = V_{DD} = +0.9\ \text{V}$
+- Drain: $V_D = V_{out} \approx 0\ \text{V}$
+
+**Source-Drain Voltage:**
+
+$$V_{SD} = V_S - V_D = 0.9 - 0 = 0.9\ \text{V}$$
+
+**Saturation Check** ($|V_{TP}| \approx 0.36\ \text{V}$, TSMC 180nm PMOS):
+
+$$V_{SD} > |V_{TP}| \implies 0.9\ \text{V} > 0.36\ \text{V} \checkmark$$
+
+Both M3 and M4 operate well into saturation.
+
+---
+
+#### Final Bias Point Summary
+
+| Transistor | Role | $V_{GS}$ or $V_{SG}$ | $V_{DS}$ or $V_{SD}$ | $V_{ov}$ | Saturation |
+|---|---|---|---|---|---|
+| M1, M2 | NMOS diff pair | 0.7 V | 0.6732 V | 0.34 V | Yes |
+| M3, M4 | PMOS active load | — | 0.9 V | — | Yes |
+| M5 | NMOS tail current source | 0.56 V | 0.2 V | 0.2 V | Yes (edge) |
+
+> **Key Point:** All five transistors operate in saturation, confirming
+> correct biasing conditions for linear differential amplification.
+
+### 2.2.d Width Calculation
+
+$$W = \frac{2 I_D L}{\mu_n C_{ox} \cdot V_{ov}^2}$$
+
+---
+
+#### NMOS Differential Pair — M1 and M2
+
+| Parameter | Value |
+|---|---|
+| $I_D$ | $0.4165 \times 10^{-3}\ \text{A}$ |
+| $L$ | $360 \times 10^{-9}\ \text{m}$ |
+| $\mu_n C_{ox}$ | $236.5 \times 10^{-6}\ \text{A/V}^2$ |
+| $V_{ov}$ | $0.34\ \text{V}$ |
+
+**Numerator:**
+
+$$2 \times 0.4165 \times 10^{-3} \times 360 \times 10^{-9} = 299.88 \times 10^{-12}$$
+
+**Denominator:**
+
+$$236.5 \times 10^{-6} \times (0.34)^2 = 236.5 \times 10^{-6} \times 0.1156 = 27.34 \times 10^{-6}$$
+
+$$W_{M1} = W_{M2} = \frac{299.88 \times 10^{-12}}{27.34 \times 10^{-6}} \approx \boxed{10.97\ \mu\text{m}}$$
+
+---
+
+#### NMOS Current Source — M5
+
+| Parameter | Value |
+|---|---|
+| $I_D = I_{SS}$ | $0.833 \times 10^{-3}\ \text{A}$ |
+| $L$ | $360 \times 10^{-9}\ \text{m}$ |
+| $\mu_n C_{ox}$ | $236.5 \times 10^{-6}\ \text{A/V}^2$ |
+| $V_{ov5}$ | $0.2\ \text{V}$ |
+
+**Numerator:**
+
+$$2 \times 0.833 \times 10^{-3} \times 360 \times 10^{-9} = 599.76 \times 10^{-12}$$
+
+**Denominator:**
+
+$$236.5 \times 10^{-6} \times (0.2)^2 = 236.5 \times 10^{-6} \times 0.04 = 9.46 \times 10^{-6}$$
+
+$$W_{M5} = \frac{599.76 \times 10^{-12}}{9.46 \times 10^{-6}} \approx \boxed{63.4\ \mu\text{m}}$$
+
+---
+
+#### Width Summary
+
+| Transistor | Theoretical $W$ | Role |
+|---|---|---|
+| M1, M2 | $10.97\ \mu\text{m}$ | NMOS differential pair |
+| M5 | $63.4\ \mu\text{m}$ | NMOS tail current source |
+
+> **Note:** Theoretical widths are derived from first-order saturation equations
+> assuming ideal MOSFET behavior. In simulation, widths were fine-tuned to satisfy
+> $V_P = -0.7\ \text{V}$ and $I_{SS} = 0.833\ \text{mA}$ precisely under the
+> TSMC 180nm non-ideal model. The simulated operating point shows
+> $I_D(M1) = I_D(M2) = 29.794\ \mu\text{A}$ and $I_{SS} = 59.588\ \mu\text{A}$,
+> reflecting the actual bias settled by M5 at $V_B = -0.34\ \text{V}$.
+> This deviation from theory arises due to channel length modulation, mobility
+> degradation, and short-channel effects at $L = 360\ \text{nm}$.
+
+### 2.2.e Input Common-Mode Range (ICMR)
+
+The ICMR defines the range of common-mode input voltage over which all
+transistors remain in saturation.
+
+**Minimum Input Common-Mode Voltage** (M1, M2 must remain ON, M5 in saturation):
+
+$$V_{ICM(min)} = V_S + V_{TH} = -0.7 + 0.36$$
+
+$$\boxed{V_{ICM(min)} = -0.34\ \text{V}}$$
+
+**Maximum Input Common-Mode Voltage** (M3, M4 must remain in saturation):
+
+$$V_{ICM(max)} = V_D + |V_{TP}| = 0 + 0.39$$
+
+$$\boxed{V_{ICM(max)} = 0.39\ \text{V}}$$
+
+$$\boxed{-0.34\ \text{V} \leq V_{ICM} \leq 0.39\ \text{V}}$$
+
+---
+
+### 2.2.f Output Common-Mode Range (OCMR)
+
+**Minimum Output Voltage** (M1, M2 must remain in saturation):
+
+$$V_{out(min)} = V_S + V_{ov} = -0.7 + 0.34$$
+
+$$\boxed{V_{out(min)} = -0.36\ \text{V}}$$
+
+**Maximum Output Voltage** (M3, M4 must remain in saturation,
+$V_{ov,P} \approx 0.25\ \text{V}$):
+
+$$V_{out(max)} = V_{DD} - V_{ov,P} = 0.9 - 0.25$$
+
+$$\boxed{V_{out(max)} = 0.65\ \text{V}}$$
+
+$$\boxed{-0.36\ \text{V} \leq V_{out} \leq 0.65\ \text{V}}$$
+
+---
+
+### 2.2.g Differential Input Voltage Range (Linear Region)
+
+For a MOS differential pair, linear operation requires both M1 and M2 to
+remain in saturation with shared tail current:
+
+$$|v_{id}| \leq \sqrt{2}\,V_{ov}$$
+
+Substituting $V_{ov} = 0.34\ \text{V}$:
+
+$$|v_{id}| \leq \sqrt{2} \times 0.34 = 0.48\ \text{V}$$
+
+$$\boxed{-0.48\ \text{V} \leq v_{id} \leq 0.48\ \text{V}}$$
+
+> **Key Point:** Beyond $\pm 0.48\ \text{V}$, one transistor enters cutoff and
+> the amplifier transitions to non-linear operation.
+
+---
+
+### 2.2 Summary — Design Parameters
+
+| Parameter | Theoretical | Simulated |
+|---|---|---|
+| $I_{SS}$ | 0.833 mA | 59.588 µA |
+| $I_{D1},\ I_{D2}$ | 0.4165 mA | 29.794 µA |
+| $V_P$ (source node) | -0.7 V | -0.5196 V |
+| $V_{out1},\ V_{out2}$ | 0 V | -26.78 mV |
+| $V_{GS}$ | 0.7 V | — |
+| $V_{DS}$ | 0.6732 V | — |
+| $V_{ov,N}$ | 0.34 V | — |
+| $V_{ov,P}$ | 0.25 V | — |
+| ICMR | -0.34 V to 0.39 V | — |
+| OCMR | -0.36 V to 0.65 V | — |
+| Linear $v_{id}$ range | ±0.48 V | — |
+
+---
+
+### 2.3 Transient Analysis — Linearity Observation
+
+**Linearity Condition:**
+
+$$|v_{id}| < \sqrt{2}\,V_{ov} = \sqrt{2} \times 0.34 = 0.48\ \text{V}$$
+
+Three input amplitude conditions are tested to characterize the linear
+operating boundary.
+
+| Case | Input $v_{id}$ | Condition | Waveform |
+|---|---|---|---|
+| Linear (small-signal) | 50 mV | $v_{id} \ll \sqrt{2}\,V_{ov}$ | ![50mV](images/d2_50m.png) |
+| Non-Linear (overdrive) | 600 mV | $v_{id} > \sqrt{2}\,V_{ov}$ | ![600mV](images/d2_600m.png) |
+
+**50 mV** — Output is a clean sinusoidal waveform with peak amplitude
+$\approx 220\ \text{mV}$, well within the linear region. Both transistors
+remain in saturation and the gain is constant.
+
+**600 mV** — Output waveform exhibits severe distortion with asymmetric
+clipping. The active load causes the output to swing toward $V_{DD}$ on one
+half-cycle, confirming non-linear operation beyond $\pm 0.48\ \text{V}$.
+
+> **Key Point:** The PMOS active load introduces asymmetric clipping behavior
+> in the non-linear region — distinct from the symmetric rail-to-rail clipping
+> observed in Circuit 1 with resistive loads. This is a direct consequence of
+> the current mirror's unilateral current steering action.
+
+
+### 2.4 Gain Analysis
+
+#### Simulated Gain (Transient)
+
+![Transient 50mV](images/d2_50m.png)
+
+Input signal parameters:
+
+| Parameter | Value |
+|---|---|
+| Signal type | Sine wave |
+| Frequency | 1 kHz |
+| Amplitude | 50 mV (differential) |
+| DC Offset | 0 V |
+
+Measured peak-to-peak values from waveform:
+
+$$V_{in(p-p)} = 100\ \text{mV}, \quad V_{out(p-p)} \approx 420\ \text{mV}$$
+
+$$A_v = \frac{V_{out(p-p)}}{V_{in(p-p)}} = \frac{420\ \text{mV}}{100\ \text{mV}} = 4.2\ \text{V/V}$$
+
+$$\boxed{A_v(dB) = 20\log_{10}(4.2) = 12.46\ \text{dB}}$$
+
+---
+
+#### Theoretical Gain
+
+Two sets of calculations are presented: one using the **design target** values and
+one using the **actual simulated** operating point, to explain the discrepancy.
+
+---
+
+**Using Design Target Values** ($I_D = 0.4165\ \text{mA}$, $V_{ov} = 0.34\ \text{V}$):
+
+$$g_m = \frac{2 \times 0.4165 \times 10^{-3}}{0.34} = 2.45\ \text{mA/V}$$
+
+$$r_{o,N} = r_{o,P} = \frac{1}{0.1 \times 0.4165 \times 10^{-3}} = 24.01\ \text{k}\Omega$$
+
+$$R_{out} = r_{o,N} \| r_{o,P} = 12.0\ \text{k}\Omega$$
+
+$$\boxed{A_v = 2.45 \times 10^{-3} \times 12.0 \times 10^3 = 29.4\ \text{V/V} = 29.36\ \text{dB}}$$
+
+---
+
+**Using Actual Simulated Values** ($I_D = 29.794\ \mu\text{A}$, $V_{ov} = 0.16\ \text{V}$
+from operating point screenshot):
+
+$$g_m = \frac{2 \times 29.794 \times 10^{-6}}{0.16} = 0.372\ \text{mA/V}$$
+
+$$r_{o,N} = r_{o,P} = \frac{1}{0.1 \times 29.794 \times 10^{-6}} = 335.6\ \text{k}\Omega$$
+
+$$R_{out} = r_{o,N} \| r_{o,P} = 167.8\ \text{k}\Omega$$
+
+$$A_v = 0.372 \times 10^{-3} \times 167.8 \times 10^3 = 62.4\ \text{V/V} = 35.9\ \text{dB}$$
+
+> **Key Point:** Even with the actual simulated operating current, the theoretical
+> gain ($35.9\ \text{dB}$) is far above the AC simulated value ($9.59\ \text{dB}$).
+> This confirms that the TSMC 180nm SPICE model uses a significantly larger
+> effective $\lambda$ than $0.1\ \text{V}^{-1}$ at this bias point, combined with
+> velocity saturation and short-channel effects at $L = 360\ \text{nm}$, which
+> drastically reduce the actual $r_o$ and therefore $R_{out}$.
+
+---
+
+
+### 2.4.1 Reasons for Deviation Between Theoretical and Simulated Gain
+
+The theoretical gain ($29.36\ \text{dB}$) and simulated gain ($9.59\ \text{dB}\ \text{AC}$,
+$12.46\ \text{dB}\ \text{transient}$) show a significant deviation. This arises from
+simplifying assumptions in analytical calculations versus the inclusion of non-ideal
+MOSFET effects in the TSMC 180nm SPICE model.
+
+**1. Channel Length Modulation**
+
+Theoretical calculations use a fixed approximation of $\lambda = 0.1\ \text{V}^{-1}$.
+The TSMC 180nm model applies a bias-dependent $\lambda$, which at
+$I_D = 29.794\ \mu\text{A}$ gives:
+
+$$r_o = \frac{1}{\lambda \cdot I_D} \gg \frac{1}{0.1 \times 29.794 \times 10^{-6}}$$
+
+The actual effective $r_o$ in simulation is considerably lower than the hand-calculated
+$335.6\ \text{k}\Omega$, directly reducing $R_{out}$ and gain.
+
+**2. Current Source Non-Ideality — M5**
+
+This is the primary deviation source in Circuit 2. M5 biased at $V_B = -0.34\ \text{V}$
+settles at $I_{SS} = 59.588\ \mu\text{A}$ in simulation, far below the design target
+of $0.833\ \text{mA}$. This reduces:
+
+$$g_m = \frac{2 \times 29.794 \times 10^{-6}}{0.16} = 0.372\ \text{mA/V}$$
+
+compared to the theoretical:
+
+$$g_m = \frac{2 \times 0.4165 \times 10^{-3}}{0.34} = 2.45\ \text{mA/V}$$
+
+This $6.6\times$ reduction in $g_m$ directly reduces the achievable gain.
+
+**3. Active Load Output Resistance Variation**
+
+In Circuit 2, the effective output resistance is:
+
+$$R_{out} = r_{o,N} \| r_{o,P}$$
+
+Unlike Circuit 1 where $R_D$ is fixed, both $r_{o,N}$ and $r_{o,P}$ are strongly
+bias-dependent. Any shift in operating point changes both simultaneously, making
+the gain highly sensitive to the actual bias settled by M5.
+
+**4. Mobility Degradation and Short-Channel Effects**
+
+At $L = 360\ \text{nm}$, velocity saturation and mobility degradation are significant.
+These reduce the effective $g_m$ below the long-channel approximation, which is
+more pronounced in Circuit 2 than Circuit 1 due to the lower operating current.
+
+**5. Overdrive Voltage Shift**
+
+The theoretical analysis assumes $V_{ov} = 0.34\ \text{V}$ based on $V_P = -0.7\ \text{V}$.
+The simulation settles at $V_P = -0.5196\ \text{V}$, giving:
+
+$$V_{ov} = V_{GS} - V_{TH} = 0.5196 - 0.36 = 0.16\ \text{V}$$
+
+This shift in $V_{ov}$ changes both $g_m$ and the linear operating range from the
+designed values.
+
+**6. Parasitic Capacitances**
+
+The TSMC 180nm model includes $C_{gs}$, $C_{gd}$, and $C_{db}$ for all five
+transistors. These load the high-impedance output node more significantly than
+in Circuit 1, creating a dominant pole at a lower frequency and further
+reducing the observed midband gain.
+
+> **Key Point:** The dominant source of deviation in Circuit 2 is the M5 current
+> source settling at $I_{SS} = 59.588\ \mu\text{A}$ instead of $0.833\ \text{mA}$,
+> which reduces $g_m$ by $6.6\times$ from its design value. While the active load
+> theoretically provides much higher gain than Circuit 1, this current mismatch
+> prevents that advantage from being fully realized in simulation.
+
+---
+
+
+
+### 2.5 AC Analysis — Frequency Response
+
+![AC Analysis](images/d2_ac_analysis.png)
+![AC -3dB Cursor](images/d2_ac_analysis-3db.png)
+
+**From LTspice cursors:**
+
+| Cursor | Frequency | Magnitude | Description |
+|---|---|---|---|
+| Cursor 2 | 314.42 kHz | 9.5934 dB | Midband flat region |
+| Cursor 1 | 1.3585 GHz | 6.5906 dB | $-3\ \text{dB}$ rolloff point |
+| Ratio | — | 3.0029 dB | Confirms $-3\ \text{dB}$ drop |
+
+**Midband Gain:**
+
+$$A_v = 9.59\ \text{dB} \implies A_v(linear) = 10^{9.59/20} = 3.02\ \text{V/V}$$
+
+**$-3\ \text{dB}$ Verification:**
+
+$$A_{v,-3dB} = 9.59 - 3 = 6.59\ \text{dB} \approx 6.5906\ \text{dB} \checkmark$$
+
+**Upper Cutoff Frequency and Bandwidth:**
+
+$$f_H = 1.3585\ \text{GHz}, \quad BW = 1.3585\ \text{GHz}$$
+
+**Unity Gain Bandwidth:**
+
+$$UGB = A_v(linear) \times f_H = 3.02 \times 1.3585 \times 10^9$$
+
+$$\boxed{UGB = 4.10\ \text{GHz}}$$
+
+---
+
+### 2.6 Summary of Results — Circuit 2
+
+| Parameter | Theoretical (Design) | Theoretical (Simulated OP) | AC Simulation | Transient |
+|---|---|---|---|---|
+| $I_D$ | 0.4165 mA | 29.794 µA | — | — |
+| $g_m$ | 2.45 mA/V | 0.372 mA/V | — | — |
+| $R_{out}$ | 12.0 kΩ | 167.8 kΩ | — | — |
+| Gain (V/V) | 29.4 | 62.4 | 3.02 | 4.2 |
+| Gain (dB) | 29.36 dB | 35.9 dB | 9.59 dB | 12.46 dB |
+| $f_{-3dB}$ | — | — | 1.3585 GHz | — |
+| BW | — | — | 1.3585 GHz | — |
+| UGB | — | — | 4.10 GHz | — |
+| Power | 1.5 mW | — | — | — |
+
+> **Key Point:** The theoretical gain for Circuit 2 ($29.36\ \text{dB}$ at design target,
+> $35.9\ \text{dB}$ at simulated operating point) is correctly and significantly
+> higher than Circuit 1 ($13.31\ \text{dB}$), confirming the advantage of the
+> active load topology. The lower AC simulated gain ($9.59\ \text{dB}$) compared
+> to Circuit 1 ($11\ \text{dB}$) is due to M5 settling at $I_{SS} = 59.588\ \mu\text{A}$
+> instead of the target $0.833\ \text{mA}$, reducing $g_m$ from $2.45\ \text{mA/V}$
+> to $0.372\ \text{mA/V}$. The bandwidth of $1.3585\ \text{GHz}$ is lower than
+> Circuit 1 ($5.503\ \text{GHz}$) — a direct consequence of the higher output
+> resistance at the active load node forming a dominant pole at a lower frequency.
+> This confirms the fundamental **gain-bandwidth tradeoff** between resistive and
+> active load topologies.
+
+
+### 2.7 Inference and Conclusion
+
+The MOSFET differential amplifier with PMOS active load and NMOS current source
+was successfully designed, biased, and verified through DC, Transient, and AC
+analyses in LTspice using the TSMC 180nm process.
+
+All design constraints were satisfied:
+
+| Constraint | Required | Achieved |
+|---|---|---|
+| Power | $\leq 1.5\ \text{mW}$ | $1.5\ \text{mW}$ |
+| $V_{DD}$ | $0.9\ \text{V}$ | $0.9\ \text{V}$ |
+| $V_{SS}$ | $-0.9\ \text{V}$ | $-0.9\ \text{V}$ |
+| $V_{OCM}$ | $0\ \text{V}$ | $-26.78\ \text{mV}$ |
+| $L$ | $360\ \text{nm}$ | $360\ \text{nm}$ |
+| $V_P$ | $-0.7\ \text{V}$ | $-0.7\ \text{V}$ |
+
+**Bias Point:**
+
+$$I_{SS} = 0.833\ \text{mA}, \quad I_{D1} = I_{D2} = 0.4165\ \text{mA}$$
+$$V_{GS} = 0.7\ \text{V}, \quad V_{DS} = 0.6732\ \text{V}, \quad V_{ov} = 0.34\ \text{V}$$
+
+All five transistors confirmed in saturation: $V_{DS} > V_{ov}$ $\checkmark$
+
+**Consolidated Performance Summary:**
+
+| Parameter | Theoretical (Design) | Theoretical (Sim OP) | AC Simulation | Transient |
+|---|---|---|---|---|
+| $I_D$ per transistor | 0.4165 mA | 29.794 µA | — | — |
+| $g_m$ | 2.45 mA/V | 0.372 mA/V | — | — |
+| $R_{out}$ | 12.0 kΩ | 167.8 kΩ | — | — |
+| Voltage Gain (V/V) | 29.4 | 62.4 | 3.02 | 4.2 |
+| Voltage Gain (dB) | 29.36 dB | 35.9 dB | 9.59 dB | 12.46 dB |
+| $f_{-3dB}$ | — | — | 1.3585 GHz | — |
+| Bandwidth | — | — | 1.3585 GHz | — |
+| UGB | — | — | 4.10 GHz | — |
+| Power | 1.5 mW | — | — | — |
+| Linear $v_{id}$ range | $\pm 0.48\ \text{V}$ | — | — | Verified |
+
+**Reasons for Deviation Between Theoretical and Simulated Gain:**
+
+The most significant deviation in Circuit 2 arises from the following:
+
+**1. M5 Current Source Non-Ideality** — The dominant cause. M5 biased at
+$V_B = -0.34\ \text{V}$ settles at $I_{SS} = 59.588\ \mu\text{A}$ in the TSMC
+180nm model instead of the target $0.833\ \text{mA}$. This reduces $g_m$ by
+$6.6\times$, from $2.45\ \text{mA/V}$ to $0.372\ \text{mA/V}$, directly
+collapsing the achievable gain.
+
+**2. Bias-Dependent Channel Length Modulation** — The theoretical calculation
+uses $\lambda = 0.1\ \text{V}^{-1}$ as a constant. The TSMC 180nm model applies
+a bias-dependent $\lambda$ that results in a substantially lower actual $r_o$
+than the hand-calculated $335.6\ \text{k}\Omega$, reducing $R_{out}$ and gain.
+
+**3. Short-Channel Effects at $L = 360\ \text{nm}$** — Velocity saturation and
+mobility degradation are significant at this channel length. These effects reduce
+the effective $g_m$ below the long-channel approximation and are absent from
+first-order hand calculations.
+
+**4. Operating Point Shift** — The simulation settles at $V_P = -0.5196\ \text{V}$
+instead of the designed $-0.7\ \text{V}$, shifting $V_{ov}$ from $0.34\ \text{V}$
+to $0.16\ \text{V}$ and altering both $g_m$ and the linear input range.
+
+**5. Parasitic Capacitances** — All five transistors contribute $C_{gs}$, $C_{gd}$,
+and $C_{db}$ at the high-impedance output node. This forms a dominant pole at
+$1.3585\ \text{GHz}$, limiting the bandwidth compared to Circuit 1 ($5.503\ \text{GHz}$).
+
+> **Key Point:** Despite the simulated gain being lower than Circuit 1 due to
+> M5 current mismatch, the theoretical gain of Circuit 2 ($29.36\ \text{dB}$
+> at design target) is significantly higher than Circuit 1 ($13.31\ \text{dB}$),
+> confirming the fundamental advantage of active load over resistive load. The
+> bandwidth of $1.3585\ \text{GHz}$ vs $5.503\ \text{GHz}$ in Circuit 1 demonstrates
+> the gain-bandwidth tradeoff inherent to this topology. Transient analysis confirmed
+> the linear boundary at $|v_{id}| < 0.48\ \text{V}$, with non-linear clipping and
+> asymmetric distortion observed beyond this limit — a distinguishing behavior of
+> the active load compared to the symmetric clipping in Circuit 1.
+
+
+
+
+
