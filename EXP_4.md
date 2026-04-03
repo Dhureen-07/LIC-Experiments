@@ -1428,7 +1428,7 @@ $1.3585\ \text{GHz}$, limiting the bandwidth compared to Circuit 1 ($5.503\ \tex
 
 
 
-# 📘 EXPERIMENT 04  
+ 
 ## Differential Amplifier Analysis — Circuit 3
 
 ---
